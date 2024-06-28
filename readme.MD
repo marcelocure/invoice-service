@@ -1,10 +1,10 @@
-## simple invoice processing
+## Simple invoice processing
 
 
-## how to install
+### how to install
 - npm install
 
-## how to run
+### how to run
 - npm start
 
 
@@ -14,5 +14,5 @@
 
 
 
-## Deploy
+### Deploy
 TODO
