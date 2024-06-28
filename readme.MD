@@ -14,5 +14,5 @@
 
 
 
-## Deploy Google Cloud
+## Deploy
 TODO
