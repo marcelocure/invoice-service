@@ -1,16 +1,16 @@
-import { Invoice } from "./invoice";
-import { InvoiceItem } from "./invoice-item";
+import { Invoice } from "./types/invoice";
+import { PurchaseOrder } from "./types/purchase-order";
 import { InvoiceService } from "./invoice-service";
 
-const invoiceItems : InvoiceItem[] = [
-    new InvoiceItem(1, 10, 5.99),
-    new InvoiceItem(2, 1, 18),
-    new InvoiceItem(3, 100, 24.9),
-    new InvoiceItem(4, 50, 5),
-    new InvoiceItem(5, 100, 10),
-    new InvoiceItem(6, 1, 249),
+const purchaseOrders : PurchaseOrder[] = [
+    new PurchaseOrder(1, 10, 5.99),
+    new PurchaseOrder(2, 1, 18),
+    new PurchaseOrder(3, 100, 24.9),
+    new PurchaseOrder(4, 50, 5),
+    new PurchaseOrder(5, 100, 10),
+    new PurchaseOrder(6, 1, 249),
 ]
 
 const invoiceService : InvoiceService = new InvoiceService(0.12);
-const invoice : Invoice = invoiceService.processInvoice(invoiceItems);
+const invoice : Invoice = invoiceService.processInvoice(purchaseOrders);
 console.log(invoice);
