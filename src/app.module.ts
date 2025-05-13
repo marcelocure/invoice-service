@@ -3,21 +3,27 @@ import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/c
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { PurchaseOrderController } from './rest/purchase-order.controller';
+import { ProductController } from './rest/product.controller';
 import { AppService } from './app.service';
 import { PurchaseOrderService } from './modules/purchaseorder/purchase-order.service';
-
-import { InvoiceService } from './invoice-service';
+import { ProductService } from './modules/purchaseorder/product.service';
+import {EventEmitterModule} from "@nestjs/event-emitter";
+import {PurchaseOrderPendingListener} from "./listeners/purchase-order-pending.listener";
+import {PurchaseOrderRepository} from "./modules/repositories/purchase-order.repository";
 
 @Module({
-  imports: [ConfigModule.forRoot()],
+  imports: [ConfigModule.forRoot(), EventEmitterModule.forRoot()],
   controllers: [
     AppController,
     PurchaseOrderController,
+    ProductController
   ],
   providers: [
-    InvoiceService,
     AppService,
     PurchaseOrderService,
+    ProductService,
+    PurchaseOrderPendingListener,
+    PurchaseOrderRepository
   ],
 })
 export class AppModule implements NestModule {
