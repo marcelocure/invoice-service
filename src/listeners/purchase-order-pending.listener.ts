@@ -1,13 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
 import {PurchaseOrderDTO} from "../types/purchase-order.dto";
-import {PurchaseOrderEvent} from "../types/purchase-order.enum";
+import {PurchaseOrderService} from "../modules/purchaseorder/purchase-order.service";
+import {PurchaseOrderStatus} from "../types/purchase-order";
 
 @Injectable()
 export class PurchaseOrderPendingListener {
+
+    constructor(private readonly  purchaseOrderService: PurchaseOrderService) {}
     private readonly logger = new Logger(PurchaseOrderPendingListener.name);
-    @OnEvent(PurchaseOrderEvent.PROCESSING)
+
     handleUserCreatedEvent(purchaseOrder: PurchaseOrderDTO) {
         this.logger.log(`Processing purchase order ${JSON.stringify(purchaseOrder)}`);
+        this.purchaseOrderService.updateStatus(purchaseOrder.id, PurchaseOrderStatus.PROCESSED);
     }
 }

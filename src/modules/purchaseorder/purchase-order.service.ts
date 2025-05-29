@@ -1,11 +1,9 @@
-import {Injectable, BadRequestException, NotFoundException} from '@nestjs/common';
-import { PurchaseOrderDTO, PurchaseOrderStatus } from '../../types/purchase-order.dto';
+import {BadRequestException, Injectable, Logger, NotFoundException} from '@nestjs/common';
+import {PurchaseOrderDTO, PurchaseOrderStatus} from '../../types/purchase-order.dto';
 import * as moment from 'moment';
-import {IPurchaseOrder, PurchaseOrderModel} from '../../models/purchase-order.model';
-import { Logger } from '@nestjs/common';
-import { ProductService } from './product.service';
+import {ProductService} from './product.service';
 import {PurchaseOrderEvent} from "../../types/purchase-order.enum";
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import {EventEmitter2} from '@nestjs/event-emitter';
 import {PurchaseOrderRepository} from "../repositories/purchase-order.repository";
 
 @Injectable()
@@ -29,6 +27,14 @@ export class PurchaseOrderService {
         return purchaseOrder;
     }
 
+    public async updateStatus(id: string, status: PurchaseOrderStatus) {
+        const purchaseOrder = await this.purchaseOrderRepository.findOne(id);
+        if (purchaseOrder == null) {
+            throw new NotFoundException();
+        }
+        await this.purchaseOrderRepository.updateStatus(purchaseOrder.id, status);
+    }
+
     private async getProduct(productId: string) {
         try {
             return await this.productService.getProduct(productId);
@@ -42,21 +48,11 @@ export class PurchaseOrderService {
     }
 
     public async getPurchaseOrders(): Promise<PurchaseOrderDTO[]> {
-        return (await PurchaseOrderModel
-            .find())
-            .map(this.buildPurchaseOrder);
+        return await this.purchaseOrderRepository.findMany();
     }
 
     public async getPurchaseOrder(id:string): Promise<PurchaseOrderDTO> {
-        const po = await PurchaseOrderModel.findOne({id: id});
-        if (po == null) {
-            throw new NotFoundException();
-        }
-        return this.buildPurchaseOrder(po);
-    }
-
-    private buildPurchaseOrder(po: IPurchaseOrder) : PurchaseOrderDTO {
-        return new PurchaseOrderDTO(po.productId, po.quantity, po.unitPrice, po.taxes, po.netTotal, po.total, po.processedAt, po.processedBy, po.status, po.id );
+        return await this.purchaseOrderRepository.findOne(id);
     }
 
   // public processInvoice(items: PurchaseOrder[]) : Invoice{

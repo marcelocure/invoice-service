@@ -13,6 +13,7 @@ async function bootstrap() {
   });
   //app.useGlobalFilters(new CustomErrorFilter())
   app.enableCors();
+  app.setGlobalPrefix('/invoice-service/api/v1');
   await app.listen(3002);
 }
 
